@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+void insertAfter(struct Node* target_node, int new_data) {
+    if (target_node == NULL) {
+        return;
+    }
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = target_node->next;
+    target_node->next = new_node;
+    new_node->prev = target_node;
+    if (new_node->next != NULL) {
+        new_node->next->prev = new_node;
+    }
+}
+
+void insertBefore(struct Node** head_ref, struct Node* target_node, int new_data) {
+    if (target_node == NULL) {
+        return;
+    }
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->prev = target_node->prev;
+    target_node->prev = new_node;
+    new_node->next = target_node;
+    if (new_node->prev != NULL) {
+        new_node->prev->next = new_node;
+    } else {
+        *head_ref = new_node;
+    }
+}
+
+void displayList(struct Node* node) {
+    while (node != NULL) {
+        printf("%d <-> ", node->data);
+        node = node->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    struct Node* head = (struct Node*)malloc(sizeof(struct Node));
+    head->data = 10;
+    head->prev = NULL;
+    head->next = NULL;
+
+    insertAfter(head, 30);
+    insertAfter(head, 20);
+    
+    printf("Original List: ");
+    displayList(head);
+
+    struct Node* specific_node = head->next; 
+
+    insertAfter(specific_node, 25);
+    printf("After inserting 25 after 20: ");
+    displayList(head);
+
+    insertBefore(&head, specific_node, 15);
+    printf("After inserting 15 before 20: ");
+    displayList(head);
+
+    return 0;
+}

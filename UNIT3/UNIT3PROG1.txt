@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        exit(1);
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void appendNode(struct Node** headRef, int value) {
+    struct Node* newNode = createNode(value);
+    
+    if (*headRef == NULL) {
+        *headRef = newNode;
+        return;
+    }
+    
+    struct Node* temp = *headRef;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    
+    temp->next = newNode;
+}
+
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("Empty\n");
+        return;
+    }
+    
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+
+    appendNode(&head, 10);
+    appendNode(&head, 20);
+    appendNode(&head, 30);
+    appendNode(&head, 40);
+
+    displayList(head);
+
+    return 0;
+}

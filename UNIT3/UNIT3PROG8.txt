@@ -1,0 +1,125 @@
+#include <iostream>
+
+struct Node {
+    int data;
+    Node* prev;
+    Node* next;
+    
+    Node(int val) {
+        data = val;
+        prev = nullptr;
+        next = nullptr;
+    }
+};
+
+class DoublyLinkedList {
+public:
+    Node* head;
+
+    DoublyLinkedList() {
+        head = nullptr;
+    }
+
+    void insertAtEnd(int val) {
+        Node* newNode = new Node(val);
+        if (head == nullptr) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
+
+    void deleteFirst() {
+        if (head == nullptr) {
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        }
+        delete temp;
+    }
+
+    void deleteLast() {
+        if (head == nullptr) {
+            return;
+        }
+        if (head->next == nullptr) {
+            delete head;
+            head = nullptr;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->prev->next = nullptr;
+        delete temp;
+    }
+
+    void deleteSpecific(int val) {
+        if (head == nullptr) {
+            return;
+        }
+        Node* temp = head;
+        while (temp != nullptr && temp->data != val) {
+            temp = temp->next;
+        }
+        if (temp == nullptr) {
+            return;
+        }
+        if (temp == head) {
+            deleteFirst();
+            return;
+        }
+        if (temp->next == nullptr) {
+            deleteLast();
+            return;
+        }
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+        delete temp;
+    }
+
+    void display() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            std::cout << temp->data << " <-> ";
+            temp = temp->next;
+        }
+        std::cout << "NULL" << std::endl;
+    }
+};
+
+int main() {
+    DoublyLinkedList list;
+    
+    list.insertAtEnd(10);
+    list.insertAtEnd(20);
+    list.insertAtEnd(30);
+    list.insertAtEnd(40);
+    list.insertAtEnd(50);
+    
+    std::cout << "Original List: ";
+    list.display();
+
+    list.deleteFirst();
+    std::cout << "After deleting first node: ";
+    list.display();
+
+    list.deleteLast();
+    std::cout << "After deleting last node: ";
+    list.display();
+
+    list.deleteSpecific(30);
+    std::cout << "After deleting specific node (30): ";
+    list.display();
+
+    return 0;
+}
